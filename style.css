@@ -7,7 +7,7 @@ body {
     align-items: center;
     padding: 20px;
     margin: 0;
-    overflow: hidden;
+    overflow: hidden; /* Чтобы ничего не дергалось */
 }
 
 .eye-container {
@@ -16,32 +16,34 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-bottom: 10px;
 }
 
+/* Рисуем программное яблоко (ромб) */
 .eye-outer {
-    width: 130px;
-    height: 130px;
+    width: 120px;
+    height: 120px;
     background: #fff;
     transform: rotate(45deg);
-    /* Исправлено: теперь углы смотрят влево и вправо */
-    border-radius: 100px 15px 100px 15px; 
+    border-radius: 12px 100px 12px 100px; /* Та самая форма */
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 0 35px #00e6ff, inset 0 0 20px rgba(0,0,0,0.2);
-    overflow: hidden;
+    box-shadow: 0 0 30px #00e6ff, inset 0 0 15px rgba(0,0,0,0.2);
+    overflow: hidden; /* Зрачок не выйдет за границы */
 }
 
+/* Идеально ровный черный зрачок */
 .pupil {
-    width: 45px;
-    height: 45px;
+    width: 40px;
+    height: 40px;
     background: #000;
     border-radius: 50%;
     position: absolute;
-    /* Убираем влияние поворота родителя на движение зрачка */
+    /* Компенсируем поворот родителя, чтобы зрачок не был ромбом */
     transform: rotate(-45deg); 
-    transition: transform 0.08s ease-out;
+    transition: transform 0.1s ease-out;
     box-shadow: 0 0 10px rgba(0,0,0,0.8);
 }
 
@@ -54,14 +56,16 @@ body {
 
 .status {
     font-size: 11px;
-    margin-bottom: 25px;
+    margin-bottom: 30px;
     letter-spacing: 2px;
+    color: #00e6ff;
     animation: blink 2s infinite;
 }
 
 @keyframes blink {
-    0%, 100% { opacity: 1; }
+    0% { opacity: 1; }
     50% { opacity: 0.4; }
+    100% { opacity: 1; }
 }
 
 .services { width: 100%; max-width: 400px; }
