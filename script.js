@@ -1,42 +1,46 @@
 const tg = window.Telegram.WebApp;
 const pupil = document.getElementById('pupil');
-let selectedService = "";
+let currentService = "";
 
 tg.expand();
 
-// Сила движения зрачка (чем больше число, тем дальше он уходит от центра)
-const moveLimit = 15; 
+// Настройка чувствительности (как далеко ходит зрачок)
+const limit = 25; 
 
 document.addEventListener('mousemove', (e) => {
-    updatePosition(e.clientX, e.clientY);
+    move(e.clientX, e.clientY);
 });
 
 document.addEventListener('touchmove', (e) => {
-    const touch = e.touches[0];
-    updatePosition(touch.clientX, touch.clientY);
+    const t = e.touches[0];
+    move(t.clientX, t.clientY);
 });
 
-function updatePosition(x, y) {
-    const offX = (x - window.innerWidth / 2) / (window.innerWidth / 2);
-    const offY = (y - window.innerHeight / 2) / (window.innerHeight / 2);
-
+function move(cx, cy) {
+    // Считаем положение относительно центра
+    const x = (cx - window.innerWidth / 2) / (window.innerWidth / 2);
+    const y = (cy - window.innerHeight / 2) / (window.innerHeight / 2);
+    
+    // Двигаем зрачок. 
+    // Важно: так как родитель повернут на 45 град, 
+    // координаты тоже будут чуть под углом, но визуально это выглядит четко.
     if (pupil) {
-        pupil.style.transform = `translate(${offX * moveLimit}px, ${offY * moveLimit}px)`;
+        pupil.style.transform = `translate(${x * limit}px, ${y * limit}px) rotate(-45deg)`;
     }
 }
 
 window.selectService = function(el, name) {
     document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
     el.classList.add('selected');
-    selectedService = name;
-    tg.HapticFeedback.impactOccurred('light');
+    currentService = name;
+    tg.HapticFeedback.impactOccurred('medium');
 };
 
 window.goToChat = function() {
-    if (!selectedService) {
-        tg.showAlert("Выбери услугу!");
+    if (!currentService) {
+        tg.showAlert("Выбери услугу, агент!");
         return;
     }
-    const text = encodeURIComponent(`Привет! Хочу заказать: ${selectedService}`);
-    tg.openTelegramLink(`https://t.me/zxcLITERR?text=${text}`);
+    const link = `https://t.me/zxcLITERR?text=${encodeURIComponent("Заказ: " + currentService)}`;
+    tg.openTelegramLink(link);
 };
