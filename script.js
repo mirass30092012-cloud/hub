@@ -4,8 +4,8 @@ let currentService = "";
 
 tg.expand();
 
-// Настройка того, насколько далеко зрачок заходит в углы
-const limit = 30; 
+// Настройка чувствительности (как далеко ходит зрачок)
+const limit = 25; 
 
 document.addEventListener('mousemove', (e) => {
     move(e.clientX, e.clientY);
@@ -17,11 +17,14 @@ document.addEventListener('touchmove', (e) => {
 });
 
 function move(cx, cy) {
+    // Считаем положение относительно центра
     const x = (cx - window.innerWidth / 2) / (window.innerWidth / 2);
     const y = (cy - window.innerHeight / 2) / (window.innerHeight / 2);
     
+    // Двигаем зрачок. 
+    // Важно: так как родитель повернут на 45 град, 
+    // координаты тоже будут чуть под углом, но визуально это выглядит четко.
     if (pupil) {
-        // Зрачок бегает ровно по осям X и Y
         pupil.style.transform = `translate(${x * limit}px, ${y * limit}px) rotate(-45deg)`;
     }
 }
@@ -35,7 +38,7 @@ window.selectService = function(el, name) {
 
 window.goToChat = function() {
     if (!currentService) {
-        tg.showAlert("Сначала выбери услугу!");
+        tg.showAlert("Выбери услугу, агент!");
         return;
     }
     const link = `https://t.me/zxcLITERR?text=${encodeURIComponent("Заказ: " + currentService)}`;
