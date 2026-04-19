@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Intelligents HUB</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div class="eye-box"><div class="pupil" id="pupil"></div></div>
+    <div class="header">
+        <h1>INTELLIGENTS HUB</h1>
+        <div class="status">● СИСТЕМА МОНИТОРИНГА АКТИВНА</div>
+    </div>
+    <div class="services">
+        <div class="card" onclick="window.selectService(this, 'Validate Check')"><span>Validate Check</span><span class="stars">50 ⭐</span></div>
+        <div class="card" onclick="window.selectService(this, 'Расследование')"><span>Расследование</span><span class="stars">100 ⭐</span></div>
+        <div class="card" onclick="window.selectService(this, 'Валидация (Lite)')"><span>Валидация (Lite)</span><span class="stars">500 ⭐</span></div>
+        <div class="card" onclick="window.selectService(this, 'Валидация (Full)')"><span>Валидация (Full)</span><span class="stars">1000 ⭐</span></div>
+        <div class="card" onclick="window.selectService(this, 'Семья / Школа')"><span>Семья / Школа</span><span class="stars">2000 ⭐</span></div>
+    </div>
+    <button id="order-btn" onclick="window.goToChat()">ОФОРМИТЬ ЗАКАЗ</button>
+    <script src="script.js"></script>
+</body>
+</html>
