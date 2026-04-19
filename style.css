@@ -10,72 +10,39 @@ body {
     overflow-x: hidden;
 }
 
-.eye-box {
-    width: 140px;
-    height: 140px;
+.eye-container {
+    width: 150px;
+    height: 150px;
     margin: 20px auto;
-    position: relative; /* Удерживает глаз внутри */
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 3px solid #00e6ff;
-    border-radius: 50%;
-    box-shadow: 0 0 20px #00e6ff;
-    background: #000;
-    overflow: hidden; /* Обрезает всё, что выходит за круг */
 }
 
-#pupil {
-    width: 110%; /* Чуть больше коробки, чтобы при движении не было дырок */
+/* Картинка глаза — стоит на месте */
+.eye-base {
+    width: 100%;
     height: auto;
     position: absolute;
+    z-index: 1;
+}
+
+/* Зрачок — черный круг, который будет двигаться */
+.pupil {
+    width: 35px; /* Размер зрачка подбери под картинку */
+    height: 35px;
+    background: #000;
+    border-radius: 50%;
+    position: absolute;
+    z-index: 2; /* Поверх картинки */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
     transition: transform 0.1s ease-out;
-    will-change: transform;
 }
 
-.header h1 {
-    font-size: 24px;
-    text-align: center;
-    text-shadow: 0 0 10px #00e6ff;
-}
-
-.status {
-    font-size: 12px;
-    margin-bottom: 30px;
-    opacity: 0.8;
-}
-
-.services {
-    width: 100%;
-    max-width: 400px;
-}
-
-.card {
-    background: rgba(0, 230, 255, 0.1);
-    border: 1px solid #00e6ff;
-    padding: 15px;
-    margin-bottom: 10px;
-    border-radius: 8px;
-    display: flex;
-    justify-content: space-between;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.card.selected {
-    background: #00e6ff;
-    color: #000;
-    box-shadow: 0 0 15px #00e6ff;
-}
-
-#order-btn {
-    margin-top: 20px;
-    padding: 15px 40px;
-    background: #00e6ff;
-    border: none;
-    border-radius: 25px;
-    font-weight: bold;
-    cursor: pointer;
-    box-shadow: 0 0 20px #00e6ff;
-    transition: 0.3s;
-}
+.header h1 { font-size: 24px; text-shadow: 0 0 10px #00e6ff; text-align: center; }
+.status { font-size: 11px; margin-bottom: 25px; opacity: 0.8; }
+.services { width: 100%; max-width: 400px; }
+.card { background: rgba(0, 230, 255, 0.05); border: 1px solid rgba(0, 230, 255, 0.3); padding: 15px; margin-bottom: 12px; border-radius: 10px; display: flex; justify-content: space-between; transition: 0.2s; cursor: pointer; }
+.card.selected { background: rgba(0, 230, 255, 0.2); border-color: #00e6ff; box-shadow: 0 0 10px #00e6ff; }
+#order-btn { margin-top: 20px; padding: 16px 45px; background: #00e6ff; color: #000; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; box-shadow: 0 0 20px #00e6ff; }
