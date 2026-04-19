@@ -1,60 +1,49 @@
-body {
-    background-color: #0a0a0a;
-    color: #00e6ff;
-    font-family: 'Courier New', monospace;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    margin: 0;
-    overflow-x: hidden;
-    touch-action: manipulation;
+const tg = window.Telegram.WebApp;
+const pupil = document.getElementById('pupil');
+let selectedService = "";
+
+tg.expand();
+
+// Предел движения зрачка внутри яблока
+const moveLimit = 25; 
+
+document.addEventListener('mousemove', (e) => {
+    updatePupilPosition(e.clientX, e.clientY);
+});
+
+document.addEventListener('touchmove', (e) => {
+    const touch = e.touches[0];
+    updatePupilPosition(touch.clientX, touch.clientY);
+});
+
+function updatePupilPosition(x, y) {
+    const offX = (x - window.innerWidth / 2) / (window.innerWidth / 2);
+    const offY = (y - window.innerHeight / 2) / (window.innerHeight / 2);
+
+    // Поскольку само яблоко повернуто на 45 градусов, нам нужно 
+    // скомпенсировать этот поворот в координатах движения
+    // чтобы зрачок ходил ровно "влево-вправо", а не "наискосок"
+    
+    if (pupil) {
+        // Мы используем translate внутри "перевернутого" контейнера,
+        // поэтому нам не нужно вручную поворачивать координаты
+        pupil.style.transform = `translate(${offX * moveLimit}px, ${offY * moveLimit}px)`;
+    }
 }
 
-.eye-container {
-    width: 200px;
-    height: 120px;
-    margin: 20px auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-}
+// Функции выбора и заказа (не меняем)
+window.selectService = function(element, name) {
+    document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+    element.classList.add('selected');
+    selectedService = name;
+    tg.HapticFeedback.impactOccurred('light');
+};
 
-/* Рисуем глазное яблоко (ромбовидная форма) */
-.eye-ball {
-    width: 140px;
-    height: 140px;
-    background: #fff;
-    /* Поворачиваем квадрат, чтобы получить ромб, и скругляем углы */
-    transform: rotate(45deg);
-    border-radius: 15px 100px 15px 100px; /* Фирменная форма */
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* Синее неоновое свечение */
-    box-shadow: 0 0 25px rgba(0, 230, 255, 0.8), 0 0 40px rgba(0, 230, 255, 0.5);
-    overflow: hidden; /* Чтобы зрачок не вылетал */
-}
-
-/* Идеально ровный черный зрачок */
-.pupil {
-    width: 45px;
-    height: 45px;
-    background: #000;
-    border-radius: 50%; /* Сделать круглым */
-    position: absolute;
-    /* Поворачиваем зрачок обратно, чтобы его движение было ровным, а не под 45 градусов */
-    transform-origin: center;
-    transition: transform 0.1s ease-out;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-}
-
-/* Остальные стили для хаба */
-.header h1 { font-size: 24px; text-shadow: 0 0 10px #00e6ff; text-align: center; margin-top: 10px;}
-.status { font-size: 11px; margin-bottom: 25px; opacity: 0.8; letter-spacing: 1px;}
-.services { width: 100%; max-width: 400px; }
-.card { background: rgba(0, 230, 255, 0.05); border: 1px solid rgba(0, 230, 255, 0.2); padding: 15px; margin-bottom: 12px; border-radius: 10px; display: flex; justify-content: space-between; transition: 0.2s; cursor: pointer; }
-.card.selected { background: rgba(0, 230, 255, 0.15); border-color: #00e6ff; box-shadow: 0 0 10px #00e6ff; }
-#order-btn { margin-top: 20px; padding: 16px 45px; background: #00e6ff; color: #000; border: none; border-radius: 30px; font-weight: bold; cursor: pointer; box-shadow: 0 0 20px #00e6ff; font-size: 16px;}
+window.goToChat = function() {
+    if (!selectedService) {
+        tg.showAlert("Сначала выбери услугу!");
+        return;
+    }
+    const message = encodeURIComponent(`Привет! Я хочу заказать услугу: ${selectedService}`);
+    tg.openTelegramLink(`https://t.me/zxcLITERR?text=${message}`);
+};
