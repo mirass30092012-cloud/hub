@@ -1,52 +1,41 @@
-window.onload = function() {
-    // Ищем глаз по тегу img внутри блока eye-box
-    const eye = document.querySelector('.eye-box img');
-    let selectedServiceName = "";
+const tg = window.Telegram.WebApp;
+const pupil = document.getElementById('pupil');
+let selectedService = "";
 
-    function updateEye(x, y) {
-        if (!eye) return;
-        
-        const box = eye.getBoundingClientRect();
-        const centerX = box.left + box.width / 2;
-        const centerY = box.top + box.height / 2;
-        
-        const angle = Math.atan2(y - centerY, x - centerX);
-        // Дистанция, на которую глаз будет смещаться (не ставь много, чтобы не "улетел")
-        const distance = 15; 
-        
-        const moveX = Math.cos(angle) * distance;
-        const moveY = Math.sin(angle) * distance;
+tg.expand();
 
-        // Двигаем всю картинку глаза
-        eye.style.transform = `translate(${moveX}px, ${moveY}px)`;
-        eye.style.transition = "transform 0.1s ease-out"; // Плавность
+// Движение глаза за пальцем/мышкой
+document.addEventListener('mousemove', (e) => {
+    moveEye(e.clientX, e.clientY);
+});
+
+document.addEventListener('touchmove', (e) => {
+    const touch = e.touches[0];
+    moveEye(touch.clientX, touch.clientY);
+});
+
+function moveEye(cx, cy) {
+    const x = (cx - window.innerWidth / 2) / 25; // Амплитуда движения
+    const y = (cy - window.innerHeight / 2) / 25;
+    if (pupil) {
+        pupil.style.transform = `translate(${x}px, ${y}px)`;
     }
+}
 
-    document.addEventListener('mousemove', (e) => { updateEye(e.clientX, e.clientY); });
-    document.addEventListener('touchmove', (e) => { 
-        if(e.touches[0]) updateEye(e.touches[0].clientX, e.touches[0].clientY); 
-    });
+// Выбор услуги
+window.selectService = function(element, serviceName) {
+    document.querySelectorAll('.card').forEach(card => card.classList.remove('selected'));
+    element.classList.add('selected');
+    selectedService = serviceName;
+    tg.HapticFeedback.impactOccurred('medium');
+};
 
-    window.selectService = function(element, name) {
-        document.querySelectorAll('.card').forEach(card => card.classList.remove('selected'));
-        element.classList.add('selected');
-        selectedServiceName = name;
-    };
-
-    window.goToChat = function() {
-        if (!selectedServiceName) { alert("Выберите услугу!"); return; }
-        const text = encodeURIComponent("Привет! Хочу заказать: " + selectedServiceName);
-        const link = "https://t.me/zxcLITERR?text=" + text;
-        
-        if (window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.openTelegramLink(link);
-        } else { 
-            window.open(link, '_blank'); 
-        }
-    };
-
-    if (window.Telegram && window.Telegram.WebApp) { 
-        window.Telegram.WebApp.ready(); 
-        window.Telegram.WebApp.expand(); 
+// Переход в чат
+window.goToChat = function() {
+    if (!selectedService) {
+        alert("Сначала выбери услугу, бро!");
+        return;
     }
+    const message = encodeURIComponent(`Привет! Я хочу заказать услугу: ${selectedService}`);
+    tg.openTelegramLink(`https://t.me/zxcLITERR?text=${message}`);
 };
