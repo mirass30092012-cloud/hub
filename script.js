@@ -4,38 +4,39 @@ let selectedService = "";
 
 tg.expand();
 
-// Движение глаза за пальцем/мышкой
+// Сила движения зрачка (чем больше число, тем дальше он уходит от центра)
+const moveLimit = 15; 
+
 document.addEventListener('mousemove', (e) => {
-    moveEye(e.clientX, e.clientY);
+    updatePosition(e.clientX, e.clientY);
 });
 
 document.addEventListener('touchmove', (e) => {
     const touch = e.touches[0];
-    moveEye(touch.clientX, touch.clientY);
+    updatePosition(touch.clientX, touch.clientY);
 });
 
-function moveEye(cx, cy) {
-    const x = (cx - window.innerWidth / 2) / 25; // Амплитуда движения
-    const y = (cy - window.innerHeight / 2) / 25;
+function updatePosition(x, y) {
+    const offX = (x - window.innerWidth / 2) / (window.innerWidth / 2);
+    const offY = (y - window.innerHeight / 2) / (window.innerHeight / 2);
+
     if (pupil) {
-        pupil.style.transform = `translate(${x}px, ${y}px)`;
+        pupil.style.transform = `translate(${offX * moveLimit}px, ${offY * moveLimit}px)`;
     }
 }
 
-// Выбор услуги
-window.selectService = function(element, serviceName) {
-    document.querySelectorAll('.card').forEach(card => card.classList.remove('selected'));
-    element.classList.add('selected');
-    selectedService = serviceName;
-    tg.HapticFeedback.impactOccurred('medium');
+window.selectService = function(el, name) {
+    document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedService = name;
+    tg.HapticFeedback.impactOccurred('light');
 };
 
-// Переход в чат
 window.goToChat = function() {
     if (!selectedService) {
-        alert("Сначала выбери услугу, бро!");
+        tg.showAlert("Выбери услугу!");
         return;
     }
-    const message = encodeURIComponent(`Привет! Я хочу заказать услугу: ${selectedService}`);
-    tg.openTelegramLink(`https://t.me/zxcLITERR?text=${message}`);
+    const text = encodeURIComponent(`Привет! Хочу заказать: ${selectedService}`);
+    tg.openTelegramLink(`https://t.me/zxcLITERR?text=${text}`);
 };
