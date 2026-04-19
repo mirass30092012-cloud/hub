@@ -5,7 +5,7 @@ let selectedService = "";
 tg.expand();
 
 // Предел движения зрачка внутри яблока
-const moveLimit = 25; 
+const moveLimit = 30; 
 
 document.addEventListener('mousemove', (e) => {
     updatePupilPosition(e.clientX, e.clientY);
